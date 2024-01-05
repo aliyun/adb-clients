@@ -63,8 +63,8 @@ public class AdbClient implements Closeable {
 	 * 否则每次调用put都会调用flush.
 	 * 默认为true
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	boolean asyncCommit = true;
 

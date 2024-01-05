@@ -19,27 +19,24 @@ public class AdbConfig implements Serializable {
 	public static final long DEFAULT_BATCH_BYTE_SIZE = 2L * 1024L * 1024L;
 	public static final WriteMode DEFAULT_WRITE_MODE = WriteMode.INSERT_OR_REPLACE;
 
-	public static final int DEFAULT_READ_BATCH_SIZE = 128;
-	public static final int DEFAULT_READ_QUEUE = 256;
-
 	//----------------------------write conf--------------------------------------------
 	/**
-	 * 在AsyncCommit为true，调用put方法时，当记录数>=writeBatchSize 或 总记录字节数数>=writeBatchByteSize.
+	 * 在AsyncCommit为true，调用put方法时，当记录数 &ge; writeBatchSize 或 总记录字节数数 &ge; writeBatchByteSize.
 	 * 调用flush进行批量提交.
 	 * 默认为512
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	int writeBatchSize = DEFAULT_BATCH_SIZE;
 
 	/**
-	 * 在AsyncCommit为true，调用put方法时，当记录数>=writeBatchSize 或 总记录字节数数>=writeBatchByteSize.
+	 * 在AsyncCommit为true，调用put方法时，当记录数 &ge; writeBatchSize 或 总记录字节数数 &ge; writeBatchByteSize.
 	 * 调用flush进行List批量提交.
 	 * 默认为2MB
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long writeBatchByteSize = DEFAULT_BATCH_BYTE_SIZE;
 
@@ -48,8 +45,8 @@ public class AdbConfig implements Serializable {
 	 * 调用flush进行List批量提交.
 	 * 默认为20MB
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long writeBatchTotalByteSize = DEFAULT_BATCH_BYTE_SIZE * 10;
 
@@ -59,16 +56,16 @@ public class AdbConfig implements Serializable {
 	 * INSERT_OR_UPDATE 当主键冲突时，更新相应列
 	 * INSERT_OR_REPLACE当主键冲突时，更新所有列
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	WriteMode writeMode = DEFAULT_WRITE_MODE;
 
 	/**
-	 * 在AsyncCommit为true，当记录数>=writeBatchSize 或 总记录字节数数>=writeBatchByteSize 或距离上次flush超过writeMaxIntervalMs毫秒 调用flush进行提交     * 默认为100MB.
+	 * 在AsyncCommit为true，当记录数&ge;writeBatchSize 或总记录字节数数 &ge; writeBatchByteSize 或距离上次flush超过writeMaxIntervalMs毫秒 调用flush进行提交     * 默认为100MB.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long writeMaxIntervalMs = 10000L;
 
@@ -77,32 +74,32 @@ public class AdbConfig implements Serializable {
 	 * TRY_ONE_BY_ONE
 	 * NONE
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	WriteFailStrategy writeFailStrategy = WriteFailStrategy.TRY_ONE_BY_ONE;
 
 	/**
 	 * put操作的并发数.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	int writeThreadSize = 1;
 
 	/**
 	 * 当将Number写入Date/timestamp/timestamptz列时，将number视作距离1970-01-01 00:00:00 +00:00的毫秒数.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	boolean inputNumberAsEpochMsForDatetimeColumn = false;
 
 	/**
 	 * 当将Number写入Date/timestamp/timestamptz列时，将number视作距离1970-01-01 00:00:00 +00:00的毫秒数.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	boolean inputStringAsEpochMsForDatetimeColumn = false;
 
@@ -110,8 +107,8 @@ public class AdbConfig implements Serializable {
 	 * 启用时，not null且未在表上设置default的字段传入null时，将转为默认值.
 	 * String
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	boolean enableDefaultForNotNullColumn = true;
 
@@ -119,8 +116,8 @@ public class AdbConfig implements Serializable {
 	 * defaultTimestamp.
 	 * String
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	String defaultTimestampText = null;
 
@@ -128,8 +125,8 @@ public class AdbConfig implements Serializable {
 	 * 开启将text列value中的\u0000替换为"".
 	 * boolean
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	boolean removeU0000InTextColumnValue = true;
 
@@ -137,8 +134,8 @@ public class AdbConfig implements Serializable {
 	 * 全局flush的时间间隔.
 	 * boolean
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long forceFlushInterval = -1L;
 
@@ -146,8 +143,8 @@ public class AdbConfig implements Serializable {
 	 * 多久打印一次写入数据采样.
 	 * int
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long recordSampleInterval = -1L;
 
@@ -156,40 +153,40 @@ public class AdbConfig implements Serializable {
 	 * 请求重试次数，默认3.
 	 * 这个名字应该叫做maxTryCount，而不是retryCount，设为1其实是不会retry的
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	int retryCount = 3;
 
 	/**
 	 * 每次重试等待时间为  当前重试次数*retrySleepMs + retrySleepInitMs.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long retrySleepStepMs = 10000L;
 
 	/**
 	 * 每次重试等待时间为  当前重试次数*retrySleepMs + retrySleepInitMs.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long retrySleepInitMs = 1000L;
 
 	/**
 	 * meta信息缓存时间(ms).
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	long metaCacheTTL = 60000L;
 
 	/**
 	 * meta缓存剩余时间低于 metaCacheTTL/metaAutoRefreshFactor 将被自动刷新.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	int metaAutoRefreshFactor = 4;
 
@@ -197,39 +194,39 @@ public class AdbConfig implements Serializable {
 	/**
 	 * 顾名思义，jdbcUrl.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	String jdbcUrl;
 
 	/**
 	 * jdbcUrl，必填.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	String username;
 	/**
 	 * jdbcUrl，必填.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	String password;
 
 	/**
 	 * 是否使用fixed fe模式进行数据写入和点查.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	boolean useFixedFe = false;
 
 	/**
 	 * 使用fixed fe进行数据写入和点查时， 其他action使用的连接数.
 	 *
-	 * @HasGetter
-	 * @HasSetter
+	 * 
+	 * 
 	 */
 	int connectionSizeWhenUseFixedFe = 1;
 

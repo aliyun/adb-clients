@@ -64,8 +64,6 @@ public class ActionCollector {
 
 	/**
 	 * 该函数仅由ExecutionPool后台线程调用，因此不能抛出任何异常，要在后续的flush(internal=false)、append时再抛出.
-	 *
-	 * @throws AdbClientException
 	 */
 	public void tryFlush() {
 		flushLock.readLock().lock();

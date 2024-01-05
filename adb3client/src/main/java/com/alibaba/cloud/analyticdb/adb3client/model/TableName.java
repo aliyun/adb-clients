@@ -157,7 +157,7 @@ public class TableName implements Serializable {
 					}
 					StringBuilder sb = new StringBuilder();
 					if (parsedSchemaName != null && !parsedSchemaName.isEmpty()) {
-						sb.append("`").append(parsedSchemaName).append("`");
+						sb.append("`").append(parsedSchemaName).append("`.");
 					}
 					sb.append("`").append(parsedTableName).append("`");
 					String parsedFullName = sb.toString();

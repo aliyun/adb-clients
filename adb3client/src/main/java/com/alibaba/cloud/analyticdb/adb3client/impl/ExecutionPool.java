@@ -296,27 +296,6 @@ public class ExecutionPool implements Closeable {
 		}
 	}
 
-
-	/**
-	 * oneshot是靠started自己去控制的，如果started一直不false，也就不会结束.
-	 *
-	 * @param //started
-	 * @param //index
-	 * @param action
-	 * @return
-	 * @throws AdbClientException
-	 *
-	public Thread submitOneShotAction(AtomicBoolean started, int index, AbstractAction action) throws AdbClientException {
-		Worker worker = new Worker(config, started, index, isShardEnv);
-		boolean ret = worker.offer(action);
-		if (!ret) {
-			throw new AdbClientException(ExceptionCode.INTERNAL_ERROR, "submitOneShotAction fail");
-		}
-		Thread thread = ontShotWorkerThreadFactory.newThread(worker);
-		thread.start();
-		return thread;
-	}
-
 	/**
 	 * @param action action
 	 * @return 提交成功返回true；所有worker都忙时返回false

@@ -177,9 +177,9 @@ public class TableShardCollector {
 	/**
 	 * 是否flush完成.
 	 *
-	 * @param force                  是否强制flush，强制flush只要buffer.size > 0就一定提交，否则还是看RecordCollector自己判断是不是应该提交
+	 * @param force                  是否强制flush，强制flush只要buffer.size &gt; 0就一定提交，否则还是看RecordCollector自己判断是不是应该提交
 	 * @param async                  是否异步，同步的话，对于activeAction会wait到完成为止
-	 * @param uncommittedActionCount 如果activeAction未完成，并且buffer.size > 0 ，加一，表示还有任务没有提交給worker
+	 * @param uncommittedActionCount 如果activeAction未完成，并且buffer.size &gt; 0 ，加一，表示还有任务没有提交給worker
 	 * @return true, 没有任何pending的记录
 	 * @throws AdbClientException 异常
 	 */

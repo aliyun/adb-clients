@@ -50,13 +50,13 @@ public class MetaActionHandler extends ActionHandler<MetaAction> {
 		String[] typeNames = null;
 
 		List<String> primaryKeyList = new ArrayList<>();
-		try (ResultSet rs = conn.getMetaData().getPrimaryKeys(null, tableName.getSchemaName(), tableName.getTableName())) {
+		try (ResultSet rs = conn.getMetaData().getPrimaryKeys(tableName.getSchemaName(), null, tableName.getTableName())) {
 			while (rs.next()) {
 				primaryKeyList.add(rs.getString(4));
 			}
 		}
 		List<Column> columnList = new ArrayList<>();
-		try (ResultSet rs = conn.getMetaData().getColumns(null, tableName.getSchemaName(), tableName.getTableName(), "%")) {
+		try (ResultSet rs = conn.getMetaData().getColumns(tableName.getSchemaName(), null, tableName.getTableName(), "%")) {
 			while (rs.next()) {
 				Column column = new Column();
 				column.setName(rs.getString(4));
