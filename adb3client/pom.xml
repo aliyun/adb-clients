@@ -6,7 +6,18 @@
 
     <groupId>com.alibaba.cloud.analyticdb</groupId>
     <artifactId>adb3client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
+    <name>adb3client</name>
+    <url>http://www.aliyun.com</url>
+    <description>Aliyun AnalyticDB3.0 SDK for Java
+
+        Copyright (C) Alibaba Cloud Computing
+        All rights reserved.
+
+        版权所有 （C）阿里云计算有限公司
+
+        http://www.aliyun.com
+    </description>
 
     <distributionManagement>
         <snapshotRepository>
@@ -18,6 +29,25 @@
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:git@github.com:aliyun/adb-clients.git</connection>
+        <developerConnection>scm:git:git@github.com:aliyun/adb-clients.git</developerConnection>
+        <url>https://github.com/aliyun/adb-clients</url>
+    </scm>
+    <developers>
+        <developer>
+            <id>sufism</id>
+            <name>Zhenlin Ma</name>
+            <email>mazhenlin.mzl@alibaba-inc.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <slf4j.version>1.7.10</slf4j.version>
@@ -60,6 +90,20 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>

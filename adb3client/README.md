@@ -9,14 +9,14 @@ adbclient的主要目的时简化读写ADB(3.0)的操作，避免直接使用JDB
 <dependency>
   <groupId>com.alibaba.cloud.analyticdb</groupId>
   <artifactId>adb3client</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
 ## 数据写入
 建议项目中创建AdbClient单例，通过writeThreadSize和readThreadSize控制读写的并发（每并发占用1个JDBC连接，空闲超过connectionMaxIdleMs将被自动回收)
 ```java
-// 配置参数,url格式为 jdbc:postgresql://host:port/db
+// 配置参数,url格式为 jdbc:mysql://host:port/db
 AdbConfig config = new AdbConfig();
 config.setJdbcUrl(url);
 config.setUsername(username);
