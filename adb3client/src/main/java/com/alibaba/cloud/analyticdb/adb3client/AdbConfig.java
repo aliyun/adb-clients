@@ -70,6 +70,17 @@ public class AdbConfig implements Serializable {
 	long writeMaxIntervalMs = 10000L;
 
 	/**
+	 * 在AsyncCommit为true，如果enableEarlyCommit为true，则会进行提前提交的优化以平滑负载：
+	 * 1.当已经过去了maxWaitTime 40%的时间 调用flush提交
+	 * 2.当前行数的数据已经超过40%maxByteSize 调用flush提交
+	 * 3.当当前的行数的数据超过1/4的剩余availableByteSize 调用flush提交
+	 * 如果enableEarlyCommit为true则不进行上述优化
+	 * 默认true
+	 *
+	 */
+	boolean enableEarlyCommit = true;
+
+	/**
 	 * 当INSERT失败采取的策略.
 	 * TRY_ONE_BY_ONE
 	 * NONE
@@ -328,6 +339,14 @@ public class AdbConfig implements Serializable {
 
 	public void setWriteMaxIntervalMs(long writeMaxIntervalMs) {
 		this.writeMaxIntervalMs = writeMaxIntervalMs;
+	}
+
+	public boolean isEnableEarlyCommit() {
+		return enableEarlyCommit;
+	}
+
+	public void setEnableEarlyCommit(boolean enableEarlyCommit) {
+		this.enableEarlyCommit = enableEarlyCommit;
 	}
 
 	@Deprecated

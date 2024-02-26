@@ -194,7 +194,7 @@ public class TableSchema implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(tableId, schemaVersion);
+		return Objects.hash(tableId, schemaVersion, Arrays.hashCode(columns), Arrays.hashCode(columnNames));
 	}
 
 	public void calculateProperties() {
@@ -268,7 +268,13 @@ public class TableSchema implements Serializable {
 				columnNamesTemp[i] = columns[i].getName();
 			}
 			this.columnNames = columnNamesTemp;
+		}
 
+		if (tableId == null) {
+			tableId = tableName.fullName;
+		}
+		if (schemaVersion == null) {
+			schemaVersion = "";
 		}
 	}
 

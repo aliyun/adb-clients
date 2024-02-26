@@ -90,6 +90,8 @@ public class TableShardCollector {
 	}
 
 	private void commit(BatchState state) throws AdbClientException {
+		LOGGER.debug("commit {} rows, {} bytes, state {} ", buffer.getRecords().size(), buffer.getByteSize(), state);
+		//System.out.println(String.format("commit %d rows, %d bytes, state %s ", buffer.getRecords().size(), buffer.getByteSize(), state));
 		activeAction = new PutAction(buffer.getRecords(), buffer.getByteSize(), buffer.getMode(), state);
 		try {
 			while (!pool.submit(activeAction)) {

@@ -29,6 +29,7 @@ public class RecordCollector {
 	private final int maxRecords;
 	private final long maxByteSize;
 	private final long maxWaitTime;
+	private final boolean enableEarlyCommit;
 
 	private final int shardCount;
 	private ExecutionPool pool;
@@ -38,6 +39,7 @@ public class RecordCollector {
 		this.maxRecords = config.getWriteBatchSize();
 		this.maxByteSize = config.getWriteBatchByteSize();
 		this.maxWaitTime = config.getWriteMaxIntervalMs();
+		this.enableEarlyCommit = config.isEnableEarlyCommit();
 		this.pool = pool;
 		this.shardCount = shardCount;
 	}
@@ -123,7 +125,7 @@ public class RecordCollector {
 		}
 		boolean isEarlyCommit = false;
 		//当已经凑够2的指数时
-		if (size > 0 && (size & (size - 1)) == 0) {
+		if (enableEarlyCommit && size > 0 && (size & (size - 1)) == 0) {
 			// 已经过去了maxWaitTime 40%的时间，统计上来说，不能再翻倍，那就提早commit
 			boolean timeCondition = startTimeMs > -1 && afterLastCommit * 5 > maxWaitTime * 2;
 			if (timeCondition) {
