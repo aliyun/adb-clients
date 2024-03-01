@@ -50,6 +50,7 @@ public class UpsertStatementBuilder {
 	boolean inputNumberAsEpochMsForDatetimeColumn;
 	boolean inputStringAsEpochMsForDatetimeColumn;
 	boolean removeU0000InTextColumnValue;
+	boolean ignoreTimeFormatError;
 
 	public UpsertStatementBuilder(AdbConfig config) {
 		this.config = config;
@@ -58,6 +59,7 @@ public class UpsertStatementBuilder {
 		this.inputNumberAsEpochMsForDatetimeColumn = config.isInputNumberAsEpochMsForDatetimeColumn();
 		this.inputStringAsEpochMsForDatetimeColumn = config.isInputStringAsEpochMsForDatetimeColumn();
 		this.removeU0000InTextColumnValue = config.isRemoveU0000InTextColumnValue();
+		this.ignoreTimeFormatError = config.isIgnoreTimeFormatError();
 	}
 
 	/**
@@ -386,7 +388,7 @@ public class UpsertStatementBuilder {
 					if (MYSQL_0000.equals(obj)) {
 						ps.setObject(index, new Timestamp(0), column.getType());
 					} else {
-						ps.setObject(index, obj, column.getType());
+						setTimeObject(ps, index, obj, column.getType());
 					}
 				}
 				break;
@@ -409,7 +411,7 @@ public class UpsertStatementBuilder {
 					if (MYSQL_0000.equals(obj)) {
 						ps.setObject(index, new java.sql.Date(0), column.getType());
 					} else {
-						ps.setObject(index, obj, column.getType());
+						setTimeObject(ps, index, obj, column.getType());
 					}
 				}
 				break;
@@ -433,12 +435,26 @@ public class UpsertStatementBuilder {
 					if (MYSQL_0000.equals(obj)) {
 						ps.setObject(index, new Time(0), column.getType());
 					} else {
-						ps.setObject(index, obj, column.getType());
+						setTimeObject(ps, index, obj, column.getType());
 					}
 				}
 				break;
 			default:
 				ps.setObject(index, obj, column.getType());
+		}
+	}
+
+	private void setTimeObject(PreparedStatement ps, int index, Object obj, int columnType) throws SQLException {
+		try {
+			ps.setObject(index, obj, columnType);
+		} catch (SQLException e) {
+			if (ignoreTimeFormatError && e.getMessage() != null &&
+					e.getMessage().contains("Cannot convert class java.lang.String to SQL type requested")) {
+				LOGGER.debug("Time format error, index={}, columnType={}, obj={}", index, columnType, obj);
+				ps.setNull(index, columnType);
+			} else {
+				throw e;
+			}
 		}
 	}
 

@@ -115,6 +115,14 @@ public class AdbConfig implements Serializable {
 	boolean inputStringAsEpochMsForDatetimeColumn = false;
 
 	/**
+	 * 当将String写入Date/timestamp/timestamptz列时，忽略时间格式错误，并将对应字段置为null.
+	 *
+	 *
+	 *
+	 */
+	boolean ignoreTimeFormatError = false;
+
+	/**
 	 * 启用时，not null且未在表上设置default的字段传入null时，将转为默认值.
 	 * String
 	 *
@@ -389,6 +397,14 @@ public class AdbConfig implements Serializable {
 
 	public void setInputStringAsEpochMsForDatetimeColumn(boolean inputStringAsEpochMsForDatetimeColumn) {
 		this.inputStringAsEpochMsForDatetimeColumn = inputStringAsEpochMsForDatetimeColumn;
+	}
+
+	public boolean isIgnoreTimeFormatError() {
+		return ignoreTimeFormatError;
+	}
+
+	public void setIgnoreTimeFormatError(boolean ignoreTimeFormatError) {
+		this.ignoreTimeFormatError = ignoreTimeFormatError;
 	}
 
 	public boolean isEnableDefaultForNotNullColumn() {
