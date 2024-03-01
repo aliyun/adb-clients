@@ -6,7 +6,7 @@
 
     <groupId>com.alibaba.cloud.analyticdb</groupId>
     <artifactId>adb3client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>adb3client</name>
     <url>http://www.aliyun.com</url>
     <description>Aliyun AnalyticDB3.0 SDK for Java
