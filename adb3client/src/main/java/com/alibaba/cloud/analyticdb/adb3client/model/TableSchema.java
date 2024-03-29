@@ -66,6 +66,11 @@ public class TableSchema implements Serializable {
 			return this;
 		}
 
+		public Builder setShardCount(int shardCount) {
+			tableSchema.shardCount = shardCount;
+			return this;
+		}
+
 		public void setDictionaryEncoding(String[] dictionaryEncoding) {
 			tableSchema.dictionaryEncoding = dictionaryEncoding;
 		}
@@ -123,6 +128,8 @@ public class TableSchema implements Serializable {
 
 	//--------table_property---------------
 	String[] distributionKeys;
+	int shardCount;
+
 	/**
 	 * DICTIONARY_ENCODING 列名，多值用","分隔 字典编码列.
 	 */
@@ -336,6 +343,10 @@ public class TableSchema implements Serializable {
 
 	public int[] getDistributionKeyIndex() {
 		return distributionKeyIndex;
+	}
+
+	public int getShardCount() {
+		return shardCount;
 	}
 
 	public String[] getDictionaryEncoding() {

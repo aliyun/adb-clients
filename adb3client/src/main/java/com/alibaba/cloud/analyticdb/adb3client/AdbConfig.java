@@ -4,6 +4,7 @@
 
 package com.alibaba.cloud.analyticdb.adb3client;
 
+import com.alibaba.cloud.analyticdb.adb3client.model.ShardMode;
 import com.alibaba.cloud.analyticdb.adb3client.model.WriteFailStrategy;
 import com.alibaba.cloud.analyticdb.adb3client.model.WriteMode;
 
@@ -252,6 +253,7 @@ public class AdbConfig implements Serializable {
 	String appName = "adb3client";
 
 	boolean enableShutdownHook = false;
+	ShardMode shardMode = ShardMode.RANDOM;
 
 	public WriteMode getWriteMode() {
 		return writeMode;
@@ -405,6 +407,14 @@ public class AdbConfig implements Serializable {
 
 	public void setIgnoreTimeFormatError(boolean ignoreTimeFormatError) {
 		this.ignoreTimeFormatError = ignoreTimeFormatError;
+	}
+
+	public ShardMode getShardMode() {
+		return shardMode;
+	}
+
+	public void setShardMode(ShardMode shardMode) {
+		this.shardMode = shardMode;
 	}
 
 	public boolean isEnableDefaultForNotNullColumn() {

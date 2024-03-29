@@ -9,8 +9,10 @@ import com.alibaba.cloud.analyticdb.adb3client.exception.AdbClientException;
 import com.alibaba.cloud.analyticdb.adb3client.exception.AdbClientWithDetailsException;
 import com.alibaba.cloud.analyticdb.adb3client.impl.ExecutionPool;
 import com.alibaba.cloud.analyticdb.adb3client.impl.collector.shard.DistributionKeyShardPolicy;
+import com.alibaba.cloud.analyticdb.adb3client.impl.collector.shard.RandomShardPolicy;
 import com.alibaba.cloud.analyticdb.adb3client.impl.collector.shard.ShardPolicy;
 import com.alibaba.cloud.analyticdb.adb3client.model.Record;
+import static com.alibaba.cloud.analyticdb.adb3client.model.ShardMode.DISTRIBUTE_KEY_HASH;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,11 @@ public class TableCollector {
 	public TableCollector(AdbConfig config, ExecutionPool pool) {
 		this.config = config;
 		this.pool = pool;
-		this.shardPolicy = new DistributionKeyShardPolicy();
+		ShardPolicy shardPolicy1 = new RandomShardPolicy();
+		if (config.getShardMode() == DISTRIBUTE_KEY_HASH) {
+			shardPolicy1 = new DistributionKeyShardPolicy();
+		}
+		this.shardPolicy = shardPolicy1;
 		this.recordSampleInterval = config.getRecordSampleInterval() * 1000000L;
 		initTableShardCollector(config.getWriteThreadSize());
 	}

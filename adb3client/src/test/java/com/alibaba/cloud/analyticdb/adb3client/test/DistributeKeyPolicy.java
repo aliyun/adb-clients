@@ -14,14 +14,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Properties;
-import java.util.Random;
 
 /**
  * A demo class.
  */
-public class MultiTableLargeDataSet {
-	private static final int EVENT_COUNT = 10_000_0000;
+public class DistributeKeyPolicy {
+	private static final int ROW_COUNT = 10_0000;
 	public static void main(String[] args) throws Exception {
 
 		String url = System.getenv("url");
@@ -34,8 +34,8 @@ public class MultiTableLargeDataSet {
 		//prepare table
 		try (Connection conn = DriverManager.getConnection(url, properties)) {
 			String[] preSqls = new String[]{
-					"drop table if exists large%d",
-					"create table large%d(id int not null," +
+					"drop table if exists shards",
+					"create table shards(id int not null," +
 							"c1 boolean," +
 							"c2 tinyint," +
 							"c3 smallint," +
@@ -52,14 +52,12 @@ public class MultiTableLargeDataSet {
 							"c14 array<int>," +
 							"c15 map<int, string>," +
 							"c16 json," +
-							"primary key(id)) DISTRIBUTE BY HASH(id) "
+							"primary key(id,c1,c4,c8)) DISTRIBUTE BY HASH(id,c1,c4,c8) "
 			};
 
-			for (int i = 0; i < 40; i++) {
-				for (String sql : preSqls) {
-					try (Statement stat = conn.createStatement()) {
-						stat.execute(String.format(sql, i));
-					}
+			for (String sql : preSqls) {
+				try (Statement stat = conn.createStatement()) {
+					stat.execute(sql);
 				}
 			}
 
@@ -68,15 +66,11 @@ public class MultiTableLargeDataSet {
 			config.setUsername(username);
 			config.setPassword(password);
 			config.setWriteMode(WriteMode.INSERT_OR_REPLACE);
-			config.setWriteThreadSize(16);
-			config.setWriteBatchSize(4096);
-			config.setWriteBatchTotalByteSize(400 * 1024 * 1024);
-			config.setWriteMaxIntervalMs(30000);
+			config.setWriteThreadSize(64);
 			config.setShardMode(ShardMode.DISTRIBUTE_KEY_HASH);
-			// config.setEnableEarlyCommit(false);
-			Random random = new Random();
 			try (AdbClient client = new AdbClient(config)) {
-				TableSchema schema0 = client.getTableSchema("large0");
+				TableSchema schema0 = client.getTableSchema("shards");
+				System.out.println("getDistributionKeyIndex:" + Arrays.toString(schema0.getDistributionKeyIndex()));
 
 				long start = System.currentTimeMillis();
 				Put put = new Put(schema0);
@@ -98,25 +92,34 @@ public class MultiTableLargeDataSet {
 				put.setObject(15, "{1:'a'}");
 				put.setObject(16, "{\"id\":0, \"name\":\"abc\", \"age\":0}");
 				client.put(put);
-				for (int j = 1; j < EVENT_COUNT; j++) {
-					int eventId = random.nextInt(40);
-					TableSchema schema = client.getTableSchema("large" + eventId);
-					Put put2 = new Put(schema);
+				for (int j = 1; j < ROW_COUNT; j++) {
+					Put put2 = new Put(schema0);
 					put2.setObject(0, j+1);
-					for (int i = 1; i <= 16; i++) {
-						if (put.isSet(i)) {
-							put2.setObject(i, put.getObject(i));
-						}
-					}
+					put2.setObject(1, j % 2 == 0);
+					put2.setObject(2, j % 128);
+					put2.setObject(3, j % 32768);
+					put2.setObject(4, j);
+					put2.setObject(5, 1.2 + j);
+					put2.setObject(6, 1.3 + j);
+					put2.setObject(7, 1.4 + j);
+					put2.setObject(8, "varchar" + j);
+					put2.setObject(9, "0x0102" + j);
+					put2.setObject(10, "2021-11-12");
+					put2.setObject(11, "23:59:59");
+					put2.setObject(12, new Timestamp(System.currentTimeMillis()));
+					put2.setObject(13, new Timestamp(System.currentTimeMillis()));
+					put2.setObject(14, "[1,2,3]");
+					put2.setObject(15, "{1:'a'}");
+					put2.setObject(16, "{\"id\":0, \"name\":\"abc\", \"age\":0}");
 					client.put(put2);
 				}
 				client.flush();
-				System.out.println(String.format("Finished put %d record in %dms", EVENT_COUNT, System.currentTimeMillis() - start));
+				System.out.println(String.format("Finished put %d record in %dms", ROW_COUNT, System.currentTimeMillis() - start));
 
-				System.out.println("select count(*) from large5-----------------------------------");
+				System.out.println("select count(*) from shards-----------------------------------");
 				client.sql(connection -> {
 					try (Statement stat = connection.createStatement()) {
-						stat.execute("select count(*) from large5");
+						stat.execute("select count(*) from shards");
 						ResultSet rs = stat.getResultSet();
 						int columnCount = rs.getMetaData().getColumnCount();
 						StringBuilder sb = new StringBuilder();

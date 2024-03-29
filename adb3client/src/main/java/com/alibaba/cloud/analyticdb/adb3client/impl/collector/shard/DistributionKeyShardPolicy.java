@@ -14,21 +14,20 @@ import java.util.concurrent.ConcurrentSkipListMap;
  */
 public class DistributionKeyShardPolicy implements ShardPolicy{
 
-	private ConcurrentSkipListMap<Integer, Integer> splitRange = new ConcurrentSkipListMap<>();
+	private int threadCount;
 
 	@Override
-	public void init(int shardCount) {
-		splitRange.clear();
-		int[][] range = ShardUtil.split(shardCount);
-		for (int i = 0; i < shardCount; ++i) {
-			splitRange.put(range[i][0], i);
-		}
+	public void init(int threadCount) {
+		this.threadCount = threadCount;
 	}
 
 	@Override
 	public int locate(Record record) {
-		int raw = ShardUtil.hash(record, record.getSchema().getDistributionKeyIndex());
-		int hash = Integer.remainderUnsigned(raw, ShardUtil.RANGE_END);
-		return splitRange.floorEntry(hash).getValue();
+		long raw = ShardUtil.hashLong(record, record.getSchema().getDistributionKeyIndex());
+		if (record.getSchema().getShardCount() < threadCount * 0.8) {//shards少，以增大并发为主要目标
+			return (int)(raw % threadCount);
+		} else {
+			return (int)(raw % record.getSchema().getShardCount() % threadCount);
+		}
 	}
 }

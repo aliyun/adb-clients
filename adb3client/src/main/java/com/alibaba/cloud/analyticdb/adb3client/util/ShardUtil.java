@@ -10,6 +10,8 @@ import com.google.common.hash.Hashing;
 
 import java.lang.reflect.Array;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -18,13 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ShardUtil {
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
-	public static final String NAME = "HASH";
-	public static final HashFunction HASH = Hashing.murmur3_32(104729);
-
-	public static final int RANGE_START = 0;
-	public static final int RANGE_END = 65536;
-
-	public static final int NULL_HASH_CODE = Integer.remainderUnsigned(hash(""), RANGE_END);
+	public static final int NULL_HASH_CODE = 0;
 
 	public static int hash(Record record, int[] indexes) {
 		int hash = 0;
@@ -45,12 +41,43 @@ public class ShardUtil {
 		return hash;
 	}
 
+	public static long hashLong(Record record, int[] indexes) {
+		if (indexes == null || indexes.length == 0) {
+			ThreadLocalRandom rand = ThreadLocalRandom.current();
+			return rand.nextLong();
+		}
+
+		long result = 0;
+		for (int i : indexes) {
+			result = XXH64.hashLong(ShardUtil.hash(record.getObject(i)), result);
+		}
+		return Math.abs(result);
+	}
+
 	public static int hash(Object obj) {
 		if (obj == null) {
 			return NULL_HASH_CODE;
 		} else {
-			if (obj instanceof byte[]) {
-				return HASH.hashBytes((byte[]) obj).asInt();
+			if (obj instanceof String) {
+				byte[] value = ((String) obj).getBytes(UTF8);
+				int result = 1;
+				for (int i = 0; i < value.length; i++) {
+					result = 31 * result + value[i];
+				}
+				return result;
+			} else if (obj instanceof byte[]) {
+				return Arrays.hashCode((byte[]) obj);
+			} else if (obj instanceof Boolean) {
+				return (Boolean) obj ? 1 : 0;
+			} else if (obj instanceof Byte || obj instanceof Integer || obj instanceof Short) {
+				return (int) obj;
+			} else if (obj instanceof Date) {
+				long time = ((Date) obj).getTime();
+				int result = (int) (time ^ (time >>> 32));
+				return result;
+			} else if (obj instanceof Long) {
+				long longVal = (Long) obj;
+				return (int) (longVal ^ (longVal >>> 32));
 			} else if (obj.getClass().isArray()) {
 				int hash = 0;
 				int length = Array.getLength(obj);
@@ -60,25 +87,8 @@ public class ShardUtil {
 				}
 				return hash;
 			} else {
-				return hash(String.valueOf(obj).getBytes(UTF8));
+				return hash(String.valueOf(obj));
 			}
 		}
-	}
-
-	public static int[][] split(int n) {
-		int base = RANGE_END / n;
-		int remain = RANGE_END % n;
-		int start = 0;
-		int end = 0;
-		int[][] ret = new int[n][];
-		for (int i = 0; i < n; ++i) {
-			end = start + base + ((remain > 0) ? 1 : 0);
-			if (remain > 0) {
-				--remain;
-			}
-			ret[i] = new int[]{start, end};
-			start = end;
-		}
-		return ret;
 	}
 }

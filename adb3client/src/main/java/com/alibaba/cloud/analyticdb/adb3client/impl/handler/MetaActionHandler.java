@@ -15,6 +15,7 @@ import com.alibaba.cloud.analyticdb.adb3client.model.TableSchema;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +74,49 @@ public class MetaActionHandler extends ActionHandler<MetaAction> {
 			}
 		}
 
+		String distributeColumns = "";
+		String physicalSchema = "";
+		int shardCount = 1;
+		String schema = tableName.getSchemaName();
+		if (schema == null || schema.isEmpty()) {
+			schema = conn.getCatalog();
+		}
+		String sql = String.format("select * from information_schema.kepler_meta_tables where table_name = '%s' and table_schema = '%s'",
+				tableName.getTableName(), schema);
+		try (Statement st = conn.createStatement()) {
+			try (ResultSet rs = st.executeQuery(sql)) {
+				if (rs.next()) {
+					String distributeType = rs.getString("distribute_type");
+					if (distributeType.equalsIgnoreCase("hash")) {
+						distributeColumns = rs.getString("distribute_column");
+						if (distributeColumns.equalsIgnoreCase("__adb_auto_id__")) {
+							distributeColumns = "";
+						}
+					}
+					physicalSchema = rs.getString("physical_table_schema");
+				}
+			}
+
+			if (!physicalSchema.isEmpty()) {
+				sql = String.format("select count(*) from information_schema.kepler_meta_shards where shard_name like '%s__%%'", physicalSchema);
+
+				try (ResultSet rs = st.executeQuery(sql)) {
+					if (rs.next()) {
+						shardCount = rs.getInt(1);
+					}
+				}
+			}
+		}
+
+
 		TableSchema.Builder builder = new TableSchema.Builder();
 
 		builder.setColumns(columnList);
 		builder.setTableName(tableName);
+		if (!distributeColumns.isEmpty()) {
+			builder.setDistributionKeys(distributeColumns.split(","));
+			builder.setShardCount(shardCount);
+		}
 		builder.setNotExist(false);
 		TableSchema tableSchema = builder.build();
 		tableSchema.calculateProperties();
