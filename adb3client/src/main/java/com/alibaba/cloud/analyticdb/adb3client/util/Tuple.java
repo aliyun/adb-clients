@@ -8,8 +8,8 @@ import java.util.Objects;
 
 /**
  * 元组.
- * @param <L>
- * @param <R>
+ * @param <L> 元素
+ * @param <R> 元素
  */
 public class Tuple<L, R> {
 	public L l;

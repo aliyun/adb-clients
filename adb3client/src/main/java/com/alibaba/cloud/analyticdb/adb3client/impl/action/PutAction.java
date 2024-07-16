@@ -26,9 +26,10 @@ public class PutAction extends AbstractAction<Void> {
 	/**
 	 * 提供的recordList必须都是相同tableSchema下的.
 	 *
-	 * @param recordList
-	 * @param byteSize
-	 * @param state
+	 * @param recordList 要写入的记录
+	 * @param byteSize 记录大小
+	 * @param mode writemode
+	 * @param state batch状态
 	 */
 	public PutAction(List<Record> recordList, long byteSize, WriteMode mode, BatchState state) {
 		this.recordList = recordList;

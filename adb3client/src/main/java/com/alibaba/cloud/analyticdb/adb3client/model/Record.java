@@ -233,7 +233,7 @@ public class Record implements Serializable {
 	 * a.merge(b).
 	 * a的值被b"覆盖"（只有b set过值会覆盖到a上），a.attachmentList=a.attachmentList+b.attachmentList，b盖在a上面.
 	 *
-	 * @param record
+	 * @param record record
 	 */
 	public void merge(Record record) {
 		if (!schema.equals(record.schema)) {
@@ -326,6 +326,7 @@ public class Record implements Serializable {
 
 	/**
 	 * 设置Binlog Record所对应的shardId.
+	 * @param shardId shardId
 	 */
 	public void setShardId(int shardId) {
 		this.shardId = shardId;

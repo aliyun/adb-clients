@@ -14,9 +14,9 @@ public class ExceptionUtil {
 	/**
 	 * 当a和b同为AdbClientWithDetailsException时，将b合并入a对象，否则返回任何一个异常.
 	 *
-	 * @param a
-	 * @param b
-	 * @return
+	 * @param a 异常
+	 * @param b 异常
+	 * @return 合并后的异常
 	 */
 	public static AdbClientException merge(AdbClientException a, AdbClientException b) {
 		if (a == null) {

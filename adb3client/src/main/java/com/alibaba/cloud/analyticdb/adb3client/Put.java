@@ -32,7 +32,7 @@ public class Put {
 	 * @param obj        列值
 	 * @param onlyInsert 当writeMode=INSERT_OR_UPDATE生效。
 	 *                   为true时，这一列只会在主键不存在的情况下写入，如果主键已存在则不更新。常见于记录row创建时间的字段。
-	 * @return
+	 * @return Put对象
 	 */
 	public Put setObject(int i, Object obj, boolean onlyInsert) {
 
@@ -56,7 +56,7 @@ public class Put {
 	 * @param obj        列值
 	 * @param onlyInsert 当writeMode=INSERT_OR_UPDATE生效。
 	 *                   为true时，这一列只会在主键不存在的情况下写入，如果主键已存在则不更新。常见于记录row创建时间的字段。
-	 * @return
+	 * @return Put对象
 	 */
 	public Put setObject(String columnName, Object obj, boolean onlyInsert) {
 		Integer i = record.getSchema().getColumnIndex(columnName);

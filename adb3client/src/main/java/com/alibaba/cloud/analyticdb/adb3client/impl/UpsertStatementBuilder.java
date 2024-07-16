@@ -496,11 +496,13 @@ public class UpsertStatementBuilder {
 	}
 
 	/**
-	 * @param conn
+	 * @param conn 连接
+	 * @param schema 库名
+	 * @param tableName 表名
 	 * @param recordList 必须都是同一张表的！！！！
-	 * @param mode
-	 * @return
-	 * @throws SQLException
+	 * @param mode writemode
+	 * @return statements
+	 * @throws SQLException SQL异常
 	 */
 	public List<PreparedStatementWithBatchInfo> buildStatements(Connection conn, TableSchema schema, TableName tableName, Collection<Record> recordList,
 																WriteMode mode) throws

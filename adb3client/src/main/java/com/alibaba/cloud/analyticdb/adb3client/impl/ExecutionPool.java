@@ -299,6 +299,7 @@ public class ExecutionPool implements Closeable {
 	/**
 	 * @param action action
 	 * @return 提交成功返回true；所有worker都忙时返回false
+	 * @throws AdbClientException 提交过程中的异常
 	 */
 	public boolean submit(AbstractAction action) throws AdbClientException {
 		if (!started.get()) {

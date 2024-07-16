@@ -9,9 +9,9 @@ import java.util.Objects;
 /**
  * 元组.
  *
- * @param <L>
- * @param <M>
- * @param <R>
+ * @param <L> 元素
+ * @param <M> 元素
+ * @param <R> 元素
  */
 public class Tuple3<L, M, R> {
     public L l;
