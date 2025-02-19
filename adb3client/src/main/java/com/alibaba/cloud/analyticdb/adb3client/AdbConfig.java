@@ -220,14 +220,14 @@ public class AdbConfig implements Serializable {
 	String jdbcUrl;
 
 	/**
-	 * jdbcUrl，必填.
+	 * username，必填.
 	 *
 	 * 
 	 * 
 	 */
 	String username;
 	/**
-	 * jdbcUrl，必填.
+	 * password，必填.
 	 *
 	 * 
 	 * 

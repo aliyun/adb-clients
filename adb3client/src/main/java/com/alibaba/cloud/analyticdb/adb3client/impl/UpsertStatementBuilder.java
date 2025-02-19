@@ -446,10 +446,21 @@ public class UpsertStatementBuilder {
 
 	private void setTimeObject(PreparedStatement ps, int index, Object obj, int columnType) throws SQLException {
 		try {
-			ps.setObject(index, obj, columnType);
+			if (obj instanceof String && (Types.TIMESTAMP_WITH_TIMEZONE == columnType || Types.TIMESTAMP == columnType)) {
+				ps.setTimestamp(index, Timestamp.valueOf((String) obj));
+			} else {
+				ps.setObject(index, obj, columnType);
+			}
 		} catch (SQLException e) {
 			if (ignoreTimeFormatError && e.getMessage() != null &&
 					e.getMessage().contains("Cannot convert class java.lang.String to SQL type requested")) {
+				LOGGER.debug("Time format error, index={}, columnType={}, obj={}", index, columnType, obj);
+				ps.setNull(index, columnType);
+			} else {
+				throw e;
+			}
+		} catch (IllegalArgumentException e) {
+			if (ignoreTimeFormatError) {
 				LOGGER.debug("Time format error, index={}, columnType={}, obj={}", index, columnType, obj);
 				ps.setNull(index, columnType);
 			} else {

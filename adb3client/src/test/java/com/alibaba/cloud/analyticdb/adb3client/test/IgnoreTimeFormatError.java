@@ -64,14 +64,14 @@ public class IgnoreTimeFormatError {
 				put.setObject(1, "2021-11-12");
 				put.setObject(2, "23:59:59");
 				put.setObject(3, "2021-11-12 23:59:59");
-				put.setObject(4, "2021-11-12 23:59:59");
+				put.setObject(4, Timestamp.valueOf("2021-11-12 23:59:59"));
 				putList.add(put);
 				Put put2 = new Put(schema0);
 				put2.setObject(0, 2);
 				put2.setObject(1, "2021-11-12");
 				put2.setObject(2, "23:59:59");
-				put2.setObject(3, "2021-11-12 23:59:59");
-				put2.setObject(4, "2021-11-12 23:59:59");
+				put2.setObject(3, "2021-11-12 23:59:59.123");
+				put2.setObject(4, Timestamp.valueOf("2021-11-12 23:59:59.123"));
 				putList.add(put2);
 				client.put(putList);
 				client.flush();
