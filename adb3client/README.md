@@ -9,7 +9,7 @@ adbclient的主要目的时简化读写ADB(3.0)的操作，避免直接使用JDB
 <dependency>
   <groupId>com.alibaba.cloud.analyticdb</groupId>
   <artifactId>adb3client</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
