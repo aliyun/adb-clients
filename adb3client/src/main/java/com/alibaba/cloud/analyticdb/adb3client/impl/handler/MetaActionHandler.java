@@ -87,9 +87,9 @@ public class MetaActionHandler extends ActionHandler<MetaAction> {
 			try (ResultSet rs = st.executeQuery(sql)) {
 				if (rs.next()) {
 					String distributeType = rs.getString("distribute_type");
-					if (distributeType.equalsIgnoreCase("hash")) {
+					if ("hash".equalsIgnoreCase(distributeType)) {
 						distributeColumns = rs.getString("distribute_column");
-						if (distributeColumns.equalsIgnoreCase("__adb_auto_id__")) {
+						if ("__adb_auto_id__".equalsIgnoreCase(distributeColumns)) {
 							distributeColumns = "";
 						}
 					}
